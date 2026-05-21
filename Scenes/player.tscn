@@ -75,10 +75,10 @@ animations = [{
 size = Vector2(10, 15)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8erm5"]
-size = Vector2(12, 13)
+size = Vector2(12, 12)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
-size = Vector2(12, 3)
+size = Vector2(12, 4)
 
 [node name="Player" type="CharacterBody2D" unique_id=2083618544]
 process_mode = 3
@@ -99,7 +99,7 @@ collision_layer = 2
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=562982650]
-position = Vector2(0, -9.5)
+position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_8erm5")
 debug_color = Color(0.99518174, 0, 0.21747762, 0.41960785)
 
@@ -108,7 +108,7 @@ collision_layer = 8
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=794976637]
-position = Vector2(0, -1.5)
+position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_cvnsp")
 debug_color = Color(0.10250718, 0.6484713, 0, 0.41960785)
 

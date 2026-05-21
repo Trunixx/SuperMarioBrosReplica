@@ -6,7 +6,7 @@ extends CharacterBody2D
 @onready var ray: RayCast2D = $AnimatedSprite2D/RayCast2D
 
 const SPEED : float = 200.0
-var direction : float = 1
+var direction : float = -1
 var is_moving : bool = false
 
 func _ready() -> void:
@@ -27,7 +27,6 @@ func _physics_process(delta: float) -> void:
 	if not is_moving:
 		remove_from_group("Enemy")
 	move_and_slide()
-	print(is_moving)
 
 func _on_hurtbox_area_entered(area: Area2D) -> void:
 	var body : Node2D = area.get_parent()
@@ -36,7 +35,7 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 		is_moving = not is_moving
 		
 		var flipped : bool = body.get_node("AnimatedSprite2D").flip_h
-		if flipped != sprite.flip_h: # I don't get why this works, but it does; I basically did it by fucking around and finding out
+		if flipped == sprite.flip_h: # I don't get why this works, but it does; I basically did it by fucking around and finding out daa
 			flip_ray_and_direction()
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
@@ -51,7 +50,7 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 	var body : Node2D = area.get_parent()
 	
 	var flipped : bool = body.get_node("AnimatedSprite2D").flip_h
-	if flipped == sprite.flip_h: # I don't get why this works again
+	if flipped == sprite.flip_h and body.is_in_group("Player") and not is_moving: # I don't get why this works again
 		flip_ray_and_direction()
 		
 	if not is_moving and body.is_in_group("Player"):

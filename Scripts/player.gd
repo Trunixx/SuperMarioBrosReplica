@@ -1,7 +1,15 @@
 extends CharacterBody2D
 
-const SPEED = 150.0
-const JUMP_VELOCITY = -350.0
+const SPEED = 150
+const JUMP_VELOCITY = -350
+const GROUND_ACCELERATION = 3.5
+const AIR_ACCELERATION = 3
+const FRICTION = 15
+
+var speed = SPEED
+var jump_velocity = JUMP_VELOCITY
+var acceleration = GROUND_ACCELERATION
+var friction = FRICTION
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var death_timer: Timer = $DeathTimer
@@ -22,19 +30,22 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 	else:
 		is_jumping = false
+		acceleration = GROUND_ACCELERATION
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_dying:
-		velocity.y = JUMP_VELOCITY
+		velocity.y = jump_velocity
 		is_jumping = true
+		acceleration = AIR_ACCELERATION
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction := Input.get_axis("left", "right")
 	if not is_dying and not is_dead:
-		if direction:
-			velocity.x = direction * SPEED
+		if direction != 0:
+			velocity.x = move_toward(velocity.x, direction * speed, acceleration)
 		else:
-			velocity.x = move_toward(velocity.x, 0, SPEED)
+			velocity.x = move_toward(velocity.x, 0, friction)
+			
 	update_animation(direction)
 	move_and_slide()
 	
@@ -57,7 +68,7 @@ func die() -> void:
 	death_timer.start(0)    
 	get_tree().paused = true
 	await get_tree().create_timer(0.3).timeout
-	velocity.y = JUMP_VELOCITY
+	velocity.y = jump_velocity
 	is_dying = false
 	is_dead = true
 	self.set_collision_mask_value(1,false)
