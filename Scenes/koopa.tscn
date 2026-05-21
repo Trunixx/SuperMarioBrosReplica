@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://b02ehm8gqn7wv"]
+
+[ext_resource type="Script" uid="uid://bbn12ma50v72n" path="res://Scripts/koopa.gd" id="1_n0nud"]
+[ext_resource type="Texture2D" uid="uid://01arfg2n32nr" path="res://Assets/Spritesheets/Enemies/Koopa.png" id="3_xjn5f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6jq0g"]
+atlas = ExtResource("3_xjn5f")
+region = Rect2(0, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xsnr2"]
+atlas = ExtResource("3_xjn5f")
+region = Rect2(17, 0, 16, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v0o2j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6jq0g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xsnr2")
+}],
+"loop": true,
+"name": &"run",
+"speed": 2.5
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n4fpq"]
+size = Vector2(12, 21.0625)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wqi4q"]
+size = Vector2(16, 21)
+
+[node name="Koopa" type="CharacterBody2D" unique_id=399972302]
+collision_layer = 4
+script = ExtResource("1_n0nud")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1804034456]
+position = Vector2(0, -12)
+sprite_frames = SubResource("SpriteFrames_v0o2j")
+animation = &"run"
+
+[node name="RayCast2D" type="RayCast2D" parent="AnimatedSprite2D" unique_id=737277595]
+target_position = Vector2(-10, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1854362973]
+position = Vector2(0, -10.46875)
+shape = SubResource("RectangleShape2D_n4fpq")
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1245212966]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1210279801]
+position = Vector2(0, -12.5)
+shape = SubResource("RectangleShape2D_wqi4q")
+debug_color = Color(0.990671, 0, 0.28119215, 0.41960785)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=280282360]
+position = Vector2(2, -10)
+rect = Rect2(-10, -13, 16, 23)
+metadata/_edit_lock_ = true
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]

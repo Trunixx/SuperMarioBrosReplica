@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://dh35ardv1dj4q"]
+
+[ext_resource type="Script" uid="uid://bexmu03xkw2ig" path="res://Scripts/shell.gd" id="1_j4ghq"]
+[ext_resource type="Texture2D" uid="uid://bg81nq8xssmn4" path="res://Assets/Spritesheets/Enemies/Shell.png" id="2_j4ghq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2hyhe"]
+atlas = ExtResource("2_j4ghq")
+region = Rect2(0, 0, 16, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vvlew"]
+atlas = ExtResource("2_j4ghq")
+region = Rect2(17, 0, 16, 15)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v0o2j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2hyhe")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vvlew")
+}],
+"loop": true,
+"name": &"waking",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n4fpq"]
+size = Vector2(14, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wqi4q"]
+size = Vector2(16, 5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j4ghq"]
+size = Vector2(16, 11)
+
+[node name="Shell" type="CharacterBody2D" unique_id=399972302]
+collision_layer = 4
+script = ExtResource("1_j4ghq")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1804034456]
+position = Vector2(0, -7.5)
+sprite_frames = SubResource("SpriteFrames_v0o2j")
+animation = &"idle"
+
+[node name="RayCast2D" type="RayCast2D" parent="AnimatedSprite2D" unique_id=1882923472]
+target_position = Vector2(-10, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1854362973]
+position = Vector2(0, -6)
+shape = SubResource("RectangleShape2D_n4fpq")
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1245212966]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1210279801]
+position = Vector2(0, -13.5)
+shape = SubResource("RectangleShape2D_wqi4q")
+debug_color = Color(0.990671, 0, 0.28119215, 0.41960785)
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=838238954]
+collision_layer = 8
+collision_mask = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=673511878]
+position = Vector2(0, -5.5)
+shape = SubResource("RectangleShape2D_j4ghq")
+debug_color = Color(0.106196724, 0.6482863, 0, 0.41960785)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=686731759]
+position = Vector2(-46, -10)
+rect = Rect2(-11, -27, 114, 37)
+metadata/_edit_lock_ = true
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
