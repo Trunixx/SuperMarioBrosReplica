@@ -2,13 +2,12 @@ extends CharacterBody2D
 
 const SPEED = 150
 const JUMP_VELOCITY = -350
-const GROUND_ACCELERATION = 3.5
-const AIR_ACCELERATION = 3
+const ACCELERATION = 2
 const FRICTION = 15
 
 var speed = SPEED
 var jump_velocity = JUMP_VELOCITY
-var acceleration = GROUND_ACCELERATION
+var acceleration = ACCELERATION
 var friction = FRICTION
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -30,13 +29,20 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 	else:
 		is_jumping = false
-		acceleration = GROUND_ACCELERATION
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_dying:
 		velocity.y = jump_velocity
 		is_jumping = true
-		acceleration = AIR_ACCELERATION
-
+	if Input.is_action_just_released("jump") and velocity.y < 0:
+		velocity.y = move_toward(velocity.y, 0, 100)
+	
+	if Input.is_action_just_pressed("sprint") and is_on_floor() and not is_dying:
+		acceleration = ACCELERATION + 2
+		speed = SPEED + 50
+	if Input.is_action_just_released("sprint") and not is_dying:
+		acceleration = ACCELERATION 
+		speed = SPEED
+	
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction := Input.get_axis("left", "right")
@@ -84,3 +90,7 @@ func _on_hitbox_area_entered(_area: Area2D) -> void:
 	
 func _on_death_timer_timeout() -> void:
 	get_tree().reload_current_scene() #TODO: # this should send a signal to the world script for SRP 
+
+func _on_hurtbox_body_entered(body: Node2D) -> void:
+	if body.name == "BottomKillzone": # not cool but it works
+		die()
