@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://xae2twf7g2up" path="res://Scenes/player.tscn" id="2_go701"]
 [ext_resource type="PackedScene" uid="uid://nsfrbc3tk5p1" path="res://Scenes/goomba.tscn" id="4_8j60k"]
 [ext_resource type="PackedScene" uid="uid://b02ehm8gqn7wv" path="res://Scenes/koopa.tscn" id="5_fo5ed"]
+[ext_resource type="PackedScene" uid="uid://bom08lp6uil35" path="res://Scenes/coin.tscn" id="6_5ukr8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_go701"]
 texture = ExtResource("1_a02cp")
@@ -195,3 +196,6 @@ position = Vector2(2816, 624)
 
 [node name="Koopa1" parent="." unique_id=591880541 instance=ExtResource("5_fo5ed")]
 position = Vector2(1720, 624)
+
+[node name="Coin" parent="." unique_id=1951434895 instance=ExtResource("6_5ukr8")]
+position = Vector2(153, 624)
