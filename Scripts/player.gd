@@ -12,9 +12,11 @@ var friction = FRICTION
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var death_timer: Timer = $DeathTimer
+@onready var coyote_timer: Timer = $CoyoteTimer
 @onready var hurtbox: Area2D = $Hurtbox
 @onready var hitbox: Area2D = $Hitbox
 
+var can_jump : bool = false
 var is_jumping : bool = false
 var is_dying : bool = false
 var is_dead : bool = false
@@ -27,18 +29,24 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor() and not is_dying:
 		velocity += get_gravity() * delta
+		if coyote_timer.is_stopped():
+			coyote_timer.start(0)
 	else:
 		is_jumping = false
+	if can_jump == false and is_on_floor() and velocity.y>=0:
+		can_jump = true
+	
 	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_dying:
+	if Input.is_action_just_pressed("jump") and not is_dying and can_jump:
 		velocity.y = jump_velocity
 		is_jumping = true
+		can_jump = false
 	if Input.is_action_just_released("jump") and velocity.y < 0:
 		velocity.y = move_toward(velocity.y, 0, 100)
 	
 	if Input.is_action_just_pressed("sprint") and is_on_floor() and not is_dying:
-		acceleration = ACCELERATION + 2
-		speed = SPEED + 50
+		acceleration = ACCELERATION + 1
+		speed = SPEED + 30
 	if Input.is_action_just_released("sprint") and not is_dying:
 		acceleration = ACCELERATION 
 		speed = SPEED
@@ -94,3 +102,6 @@ func _on_death_timer_timeout() -> void:
 func _on_hurtbox_body_entered(body: Node2D) -> void:
 	if body.name == "BottomKillzone": # not cool but it works
 		die()
+
+func _on_coyote_timer_timeout() -> void:
+	can_jump=false
